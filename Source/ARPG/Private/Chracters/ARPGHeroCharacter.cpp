@@ -14,6 +14,7 @@
 #include "AbilitySystem/ARPGAbilitySystemComponent.h"
 #include "DataAssets/StartUpData/ARPGHeroStartUpData.h"
 #include "Components/UI/ARPGHeroUIComponent.h"
+#include "AbilitySystemComponent.h"
 
 
 #include "ARPGDebugHelper.h"
@@ -68,6 +69,9 @@ void AARPGHeroCharacter::PossessedBy(AController* NewController)
 			LoadedData->GiveToAbilitySystemComponent(ARPGAbilitySystemComponent);
 		}
 	}
+
+	
+	GetAbilitySystemComponent()->OnAbilityEnded.AddUObject(this, &ThisClass::ConsumeBuffer);
 }
 
 void AARPGHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -130,11 +134,25 @@ void AARPGHeroCharacter::Input_Look(const FInputActionValue& InputActionValue)
 void AARPGHeroCharacter::Input_AbilityInputPressed(FGameplayTag InInputTag)
 {
 	ARPGAbilitySystemComponent->OnAbilityInputPressed(InInputTag);
+	
 }
 
 void AARPGHeroCharacter::Input_AbilityInputReleased(FGameplayTag InInputTag)
 {
 	ARPGAbilitySystemComponent->OnAbilityInputReleased(InInputTag);
+
+}
+
+void AARPGHeroCharacter::ConsumeBuffer(const FAbilityEndedData& Data)
+{
+
+
+	if (InputTagBuffered.IsValid())
+	{
+		Input_AbilityInputPressed(InputTagBuffered);
+		InputTagBuffered = FGameplayTag::EmptyTag;
+
+	}
 
 }
 

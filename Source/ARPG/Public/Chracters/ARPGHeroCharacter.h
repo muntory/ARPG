@@ -13,6 +13,7 @@ class UARPGInputConfigData;
 struct FInputActionValue;
 class UARPGHeroCombatComponent;
 class UARPGHeroUIComponent;
+struct FAbilityEndedData;
 /**
  * 
  */
@@ -60,7 +61,7 @@ public:
 #pragma endregion
 
 #pragma region Inputs
-
+public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UARPGInputConfigData> InputConfigData;
 
@@ -70,6 +71,11 @@ public:
 	void Input_AbilityInputPressed(FGameplayTag InInputTag);
 	void Input_AbilityInputReleased(FGameplayTag InInputTag);
 
+	UFUNCTION()
+	void ConsumeBuffer(const FAbilityEndedData& Data);
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly)
+	FGameplayTag InputTagBuffered;
 
 #pragma endregion
 

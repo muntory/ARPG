@@ -25,7 +25,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ARPG|Ability")
 	void RemoveGrantedHeroWeaponAbilities(UPARAM(ref)TArray<FGameplayAbilitySpecHandle>& InSpecHandlesToRemove);
 
-
 protected:
 
 

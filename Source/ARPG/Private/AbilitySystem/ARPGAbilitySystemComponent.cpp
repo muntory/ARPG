@@ -3,7 +3,8 @@
 
 #include "AbilitySystem/ARPGAbilitySystemComponent.h"
 #include "AbilitySystem/Abilities/ARPGHeroGameplayAbility.h"
-
+#include "Chracters/ARPGHeroCharacter.h"
+#include "ARPGGameplayTags.h"
 
 #include "ARPGDebugHelper.h"
 void UARPGAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InInputTag)
@@ -13,12 +14,21 @@ void UARPGAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InIn
 		return;
 	}
 
+	if (HasAnyMatchingGameplayTags(FGameplayTagContainer(ARPGGameplayTags::Player_Status_Attacking)))
+	{
+		GetOwner<AARPGHeroCharacter>()->InputTagBuffered = InInputTag;
+		return;
+	}
+
 	for (const FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
 		if (!AbilitySpec.DynamicAbilityTags.HasTagExact(InInputTag)) continue;
 
 		TryActivateAbility(AbilitySpec.Handle);
+		
 	}
+
+	
 }
 
 void UARPGAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTag& InInputTag)
@@ -62,5 +72,6 @@ void UARPGAbilitySystemComponent::RemoveGrantedHeroWeaponAbilities(UPARAM(ref)TA
 
 	InSpecHandlesToRemove.Empty();
 }
+
 
 
